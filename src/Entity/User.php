@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserHome::class)]
     private Collection $userHomes;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CLoth::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cloth::class)]
     private Collection $cloths;
 
     public function __construct()
@@ -189,32 +189,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, CLoth>
+     * @return Collection<int, Cloth>
      */
     public function getcloths(): Collection
     {
         return $this->cloths;
     }
 
-    public function addCLoth(CLoth $cLoth): static
+    public function addCLoth(Cloth $cloth): static
     {
-        if (!$this->cloths->contains($cLoth)) {
-            $this->cloths->add($cLoth);
-            $cLoth->setUser($this);
+        if (!$this->cloths->contains($cloth)) {
+            $this->cloths->add($cloth);
+            $cloth->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeCLoth(CLoth $cLoth): static
+    public function removeCLoth(Cloth $cloth): static
     {
-        if ($this->cloths->removeElement($cLoth)) {
+        if ($this->cloths->removeElement($cloth)) {
             // set the owning side to null (unless already changed)
-            if ($cLoth->getUser() === $this) {
-                $cLoth->setUser(null);
+            if ($cloth->getUser() === $this) {
+                $cloth->setUser(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getEmail();
     }
 }
