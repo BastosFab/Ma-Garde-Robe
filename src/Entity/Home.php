@@ -27,12 +27,13 @@ class Home
     #[ORM\OneToMany(mappedBy: 'home', targetEntity: UserHome::class)]
     private Collection $userHomes;
 
-    #[ORM\OneToOne(mappedBy: 'home', cascade: ['persist', 'remove'])]
-    private ?Cloth $cloth = null;
+    #[ORM\OneToMany(mappedBy: 'home', targetEntity: CLoth::class)]
+    private Collection $cLoths;
 
     public function __construct()
     {
         $this->userHomes = new ArrayCollection();
+        $this->cLoths = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,25 +107,38 @@ class Home
         return $this;
     }
 
-    public function getCloth(): ?Cloth
+    /**
+     * @return Collection<int, CLoth>
+     */
+    public function getCLoths(): Collection
     {
-        return $this->cloth;
+        return $this->cLoths;
     }
 
-    public function setCloth(?Cloth $cloth): static
+    public function addCLoth(CLoth $cLoth): static
     {
-        // unset the owning side of the relation if necessary
-        if ($cloth === null && $this->cloth !== null) {
-            $this->cloth->setHome(null);
+        if (!$this->cLoths->contains($cLoth)) {
+            $this->cLoths->add($cLoth);
+            $cLoth->setHome($this);
         }
-
-        // set the owning side of the relation if necessary
-        if ($cloth !== null && $cloth->getHome() !== $this) {
-            $cloth->setHome($this);
-        }
-
-        $this->cloth = $cloth;
 
         return $this;
+    }
+
+    public function removeCLoth(CLoth $cLoth): static
+    {
+        if ($this->cLoths->removeElement($cLoth)) {
+            // set the owning side to null (unless already changed)
+            if ($cLoth->getHome() === $this) {
+                $cLoth->setHome(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

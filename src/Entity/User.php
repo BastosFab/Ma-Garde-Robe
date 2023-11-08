@@ -43,12 +43,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserHome::class)]
     private Collection $userHomes;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?Cloth $cloth = null;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CLoth::class)]
+    private Collection $cloths;
 
     public function __construct()
     {
         $this->userHomes = new ArrayCollection();
+        $this->cloths = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,24 +188,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCloth(): ?Cloth
+    /**
+     * @return Collection<int, CLoth>
+     */
+    public function getcloths(): Collection
     {
-        return $this->cloth;
+        return $this->cloths;
     }
 
-    public function setCloth(?Cloth $cloth): static
+    public function addCLoth(CLoth $cLoth): static
     {
-        // unset the owning side of the relation if necessary
-        if ($cloth === null && $this->cloth !== null) {
-            $this->cloth->setUser(null);
+        if (!$this->cloths->contains($cLoth)) {
+            $this->cloths->add($cLoth);
+            $cLoth->setUser($this);
         }
 
-        // set the owning side of the relation if necessary
-        if ($cloth !== null && $cloth->getUser() !== $this) {
-            $cloth->setUser($this);
-        }
+        return $this;
+    }
 
-        $this->cloth = $cloth;
+    public function removeCLoth(CLoth $cLoth): static
+    {
+        if ($this->cloths->removeElement($cLoth)) {
+            // set the owning side to null (unless already changed)
+            if ($cLoth->getUser() === $this) {
+                $cLoth->setUser(null);
+            }
+        }
 
         return $this;
     }

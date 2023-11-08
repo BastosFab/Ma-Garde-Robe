@@ -26,10 +26,10 @@ class Cloth
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'cloth', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'cLoths')]
     private ?User $user = null;
 
-    #[ORM\OneToOne(inversedBy: 'cloth', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'cLoths')]
     private ?Home $home = null;
 
     public function getId(): ?int
@@ -107,5 +107,10 @@ class Cloth
         $this->home = $home;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }
