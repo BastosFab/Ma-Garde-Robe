@@ -27,13 +27,13 @@ class Home
     #[ORM\OneToMany(mappedBy: 'home', targetEntity: UserHome::class)]
     private Collection $userHomes;
 
-    #[ORM\OneToMany(mappedBy: 'home', targetEntity: CLoth::class)]
-    private Collection $cLoths;
+    #[ORM\OneToMany(mappedBy: 'home', targetEntity: Cloth::class)]
+    private Collection $cloths;
 
     public function __construct()
     {
         $this->userHomes = new ArrayCollection();
-        $this->cLoths = new ArrayCollection();
+        $this->cloths = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,29 +108,29 @@ class Home
     }
 
     /**
-     * @return Collection<int, CLoth>
+     * @return Collection<int, Cloth>
      */
     public function getCLoths(): Collection
     {
-        return $this->cLoths;
+        return $this->cloths;
     }
 
-    public function addCLoth(CLoth $cLoth): static
+    public function addCLoth(Cloth $cloth): static
     {
-        if (!$this->cLoths->contains($cLoth)) {
-            $this->cLoths->add($cLoth);
-            $cLoth->setHome($this);
+        if (!$this->cloths->contains($cloth)) {
+            $this->cloths->add($cloth);
+            $cloth->setHome($this);
         }
 
         return $this;
     }
 
-    public function removeCLoth(CLoth $cLoth): static
+    public function removeCLoth(Cloth $cloth): static
     {
-        if ($this->cLoths->removeElement($cLoth)) {
+        if ($this->cloths->removeElement($cloth)) {
             // set the owning side to null (unless already changed)
-            if ($cLoth->getHome() === $this) {
-                $cLoth->setHome(null);
+            if ($cloth->getHome() === $this) {
+                $cloth->setHome(null);
             }
         }
 

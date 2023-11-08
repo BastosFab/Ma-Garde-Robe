@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Cloth;
 use App\Entity\Home;
+use App\Entity\Invitation;
 use App\Entity\User;
 use App\Entity\UserHome;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -30,6 +31,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+        yield MenuItem::linkToCrud('Invitation', 'fa fa-envelope', Invitation::class);
         yield MenuItem::linkToCrud('Home', 'fa fa-home', Home::class);
         yield MenuItem::linkToCrud('cloth', 'fa fa-shirt', Cloth::class);
         yield MenuItem::linkToCrud('Users', 'fa fa-user', User::class);
